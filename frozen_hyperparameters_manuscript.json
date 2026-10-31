@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "status": "manuscript_reported_not_machine_verified",
+    "source_document": "混合神经网络的在核事故场景下的源项反演.docx",
+    "source_tables": [6, 9],
+    "warning": "The surviving Optuna notebook uses a different attention/flatten architecture and does not reproduce these values. These parameters are frozen rerun candidates, not independently verified optima."
+  },
+  "default_by_model": {
+    "2D_CNN_Attention": {
+      "learning_rate": 0.000743,
+      "batch_size": 64,
+      "dense_1_units": 32,
+      "dense_2_units": 16,
+      "filters_1": 96,
+      "filters_2": 32
+    },
+    "LSTM_Attention": {
+      "learning_rate": 0.001375,
+      "batch_size": 32,
+      "dense_1_units": 64,
+      "dense_2_units": 32,
+      "lstm_1_units": 192,
+      "lstm_2_units": 64
+    },
+    "CNN_LSTM": {
+      "learning_rate": 0.000154,
+      "batch_size": 64,
+      "dense_1_units": 48,
+      "dense_2_units": 16,
+      "filters_1": 80,
+      "filters_2": 16,
+      "lstm_1_units": 256
+    }
+  },
+  "scenarios": {
+    "1": {
+      "CLA": {
+        "filters_1": 32,
+        "filters_2": 128,
+        "lstm_1_units": 176,
+        "lstm_2_units": 128,
+        "dense_1_units": 32,
+        "dense_2_units": 24,
+        "learning_rate": 0.00012,
+        "batch_size": 32
+      }
+    },
+    "2": {
+      "CLA": {
+        "filters_1": 32,
+        "filters_2": 64,
+        "lstm_1_units": 240,
+        "lstm_2_units": 128,
+        "dense_1_units": 16,
+        "dense_2_units": 8,
+        "learning_rate": 0.00019,
+        "batch_size": 32
+      }
+    },
+    "3": {
+      "CLA": {
+        "filters_1": 80,
+        "filters_2": 48,
+        "lstm_1_units": 224,
+        "lstm_2_units": 128,
+        "dense_1_units": 48,
+        "dense_2_units": 16,
+        "learning_rate": 0.00045,
+        "batch_size": 128
+      }
+    }
+  }
+}

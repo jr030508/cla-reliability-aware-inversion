@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Large artefacts are archived on Zenodo, never committed here
+outputs/
+outputs_frozen_manuscript/
+checkpoints/
+*.h5
+*.keras
+*.ckpt
+saved_model/
+*.npy
+*.npz
+!data/audits/station_order_permutation_distribution.csv
+
+# Raw simulated datasets (~900 MB) live on Zenodo
+data s1.csv
+data s2.csv
+data s3.csv
+*.INP
+CALMET*.DAT
+CALPUFF*.lst

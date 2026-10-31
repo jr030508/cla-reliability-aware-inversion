@@ -1,0 +1,48 @@
+{
+  "time_steps": 12,
+  "feature_dim": 136,
+  "scenarios": {
+    "1": {
+      "data": "../CAL/data s1.csv",
+      "labels": ["Rate_1", "Rate_2", "Rate_3", "Rate_4"]
+    },
+    "2": {
+      "data": "../CAL/data s2.csv",
+      "labels": ["X", "Y", "Z"]
+    },
+    "3": {
+      "data": "../CAL/data s3.csv",
+      "labels": ["Rate_1", "Rate_2", "Rate_3", "Rate_4", "X", "Y", "Z"]
+    }
+  },
+  "training": {
+    "seeds": [42, 43, 44, 45, 46],
+    "test_fraction": 0.20,
+    "validation_fraction": 0.10,
+    "calibration_fraction": 0.10,
+    "epochs": 300,
+    "patience": 25,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "input_transform": "log1p_standard",
+    "bootstrap_repeats": 1000
+  },
+  "model": {
+    "filters_1": 32,
+    "filters_2": 48,
+    "lstm_1_units": 128,
+    "lstm_2_units": 64,
+    "dense_1_units": 64,
+    "dense_2_units": 32,
+    "dropout": 0.20,
+    "graph_units": 16,
+    "graph_k": 8
+  },
+  "robustness": {
+    "dropout_rates": [0.0, 0.05, 0.10, 0.20, 0.40],
+    "lognormal_sigmas": [0.0, 0.05, 0.10, 0.20],
+    "repeats": 30,
+    "detection_limit": 0.0,
+    "background_sd": 0.0
+  }
+}

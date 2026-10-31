@@ -1,0 +1,19 @@
+metric,value
+scenario1_receptors,136
+scenario1_source_to_receptor_distance_min_km,1.771
+scenario1_source_to_receptor_distance_median_km,3.659
+scenario1_source_to_receptor_distance_max_km,6.203
+scenario1_bearing_min_deg,38.18
+scenario1_bearing_max_deg,152.9
+scenario23_sampled_sources,4000
+scenario23_source_x_min_km,340.08
+scenario23_source_x_max_km,345.08
+scenario23_source_y_min_km,6177.11
+scenario23_source_y_max_km,6182.11
+scenario23_nearest_receptor_distance_min_km,0.004
+scenario23_nearest_receptor_distance_median_km,1.417
+scenario23_nearest_receptor_distance_max_km,4.07
+scenario23_outside_sector_fraction_mean,0.2034
+scenario23_outside_sector_fraction_median,0.1029
+scenario23_outside_sector_fraction_max,0.6985
+note_plume_sector_definition,"bearing window [38.18, 152.90] deg from north, i.e. the bearing span of the receptor arc seen from the Scenario 1 source"

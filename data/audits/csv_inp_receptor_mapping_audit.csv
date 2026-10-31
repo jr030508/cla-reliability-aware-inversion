@@ -1,0 +1,4 @@
+﻿scenario,csv_file,csv_receptor_columns,inp_receptor_ids,direct_identifier_match,column_reordering_detected
+Scenario 1,data s1.csv,1..136,1..136,True,False
+Scenario 2,data s2.csv,1..136,1..136,True,False
+Scenario 3,data s3.csv,1..136,1..136,True,False

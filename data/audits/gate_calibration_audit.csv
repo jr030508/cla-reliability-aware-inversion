@@ -1,0 +1,4 @@
+﻿task,tolerance,tolerance_source,gate_feasible,risk_threshold,calibration_accepted,calibration_failures,calibration_failure_rate,calibration_wilson_upper,best_available_threshold,best_available_accepted,best_available_wilson_upper
+release_rate,0.07917763926044039,clean_gate_fit_quantile,True,0.28050235302401577,273.0,19.0,0.0695970695970696,0.09937991255651621,0.15335910870882266,122,0.07104358978699625
+horizontal_location,0.1664170795803764,clean_gate_fit_quantile,False,,,,,,0.20789682013602973,235,0.10527049406206052
+release_height,0.17745295783856704,clean_gate_fit_quantile,True,0.17898590384591317,301.0,21.0,0.06976744186046512,0.09794860218699827,0.06604905326542702,106,0.04117960710187507

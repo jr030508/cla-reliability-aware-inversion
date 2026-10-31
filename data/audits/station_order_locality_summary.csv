@@ -1,0 +1,2 @@
+observed_mean_adjacent_distance_km,observed_median_adjacent_distance_km,random_mean_adjacent_distance_km,random_median_adjacent_distance_km,locality_ratio_observed_to_random_mean,permutation_p_lower_tail,n_permutations,seed
+0.28360654153298753,0.19453791404266066,3.091915175619912,2.9944590496456205,0.09172520118574273,9.999000099990002e-05,10000.0,20261029.0

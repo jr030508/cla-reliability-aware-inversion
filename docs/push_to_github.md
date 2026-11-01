@@ -58,45 +58,64 @@ git config https.proxy http://127.0.0.1:7890
 ```
 或改用 Gitee 建镜像仓库，正文里同时给出 GitHub 与 Gitee 两个链接。
 
-## 第 3 步：数据入仓（已做完）+ 模型权重上 Zenodo
+## 第 3 步：把 1.0 GB 权重作为 Release 附件上传（数据已在仓库里）
 
-### 模拟数据已放进仓库，无需再传 Zenodo
+### 为什么权重不直接进仓库
 
-三个 `data s*.csv` 各约 300 MB，超过 GitHub 单文件 100 MB 硬上限，直接 push 会被拒绝。
-解决办法是先 gzip 压缩——纯数值 CSV 压缩率极高：
+HDF5 权重**几乎压不动**（实测 100.8 MB → 93.4 MB，只减 7%），原因是 Keras 存了 Adam 优化器状态。
+而 GitHub 仓库内单文件硬上限 100 MB，单个 144 MB / 100.8 MB 的 `.h5` 直接 push 会被拒绝。
+Release 附件单文件上限 2 GB，且**不计入仓库体积**，所以仓库仍是 60 MB，clone 只要几秒。
 
-| 原始 | 大小 | 压缩后 | 大小 |
+### 打包结果（已做好，在 `拒稿重投/github_release/`）
+
+| 附件 | 内容 | 大小 | MD5 |
 |---|---|---|---|
-| data s1.csv | 297 MB | data_s1.csv.gz | 21.9 MB |
-| data s2.csv | 300 MB | data_s2.csv.gz | 18.9 MB |
-| data s3.csv | 301 MB | data_s3.csv.gz | 19.5 MB |
+| `scenario_1_weights.tar` | 场景1：4 模型 × 3 种子 | 327.9 MB | `6b6de15610f5ae2fea1366532c39f84d` |
+| `scenario_2_weights.tar` | 场景2：4 模型 × 3 种子 | 406.4 MB | `272df427b4b2435bcc350bfcaeaca767` |
+| `scenario_3_weights.tar` | 场景3：4 模型 × 3 种子 | 267.8 MB | `b136fe77a7dc452a3be3699383308bdd` |
 
-合计约 60 MB，全部低于 100 MB，已提交到 `data/simulated/`（附 `md5sums.txt` 校验和），
-README 里写了解压方式（`gzip -dk`，解压后恢复 `data s1.csv` 等原始文件名）。
+每个包内部路径 `scenario_X/iid/order_original/<MODEL>/seed_<SEED>/best_model.h5`，
+只保留 `best_model.h5`（验证损失最小的那一轮，论文数字来自它），末轮 `model.h5` 不归档。
+逐文件校验和与来源（冻结复验 / 旧运行）见仓库里的 `data/checkpoint_manifest.csv`。
 
-自己重做一遍的命令（在 `CAL` 目录下）：
+自己重做打包：`python3 pack_release_weights.py`。
+
+### 上传方式（三选一）
+
+**A. 网页（最直观）**
+1. 打开仓库页面 → 右侧 **Releases** → **Create a new release**
+2. Tag version 填 `v1.0.0`，标题例如 `Model checkpoints for the JER submission`
+3. 把三个 `.tar` 拖进 "Attach binaries" 框（单附件上限 2 GB，都合规）
+4. 建议**逐个上传**：先建 release、只传第一个附件并保存，再编辑 release 补传后两个，
+   避免一次性 1 GB 传到最后失败要重来
+5. Publish release
+
+**B. gh 命令行（可后台跑，断线可重试）**
 ```bash
-gzip -c "data s1.csv" > data_s1.csv.gz
-gzip -c "data s2.csv" > data_s2.csv.gz
-gzip -c "data s3.csv" > data_s3.csv.gz
+gh auth login
+gh release create v1.0.0 \
+  "/c/Users/12130/Desktop/CLA小论文撰写/拒稿重投/github_release/scenario_1_weights.tar" \
+  "/c/Users/12130/Desktop/CLA小论文撰写/拒稿重投/github_release/scenario_2_weights.tar" \
+  "/c/Users/12130/Desktop/CLA小论文撰写/拒稿重投/github_release/scenario_3_weights.tar" \
+  --repo <你的用户名>/cla-reliability-aware-inversion \
+  --title "Model checkpoints for the JER submission" \
+  --notes "36 best_model.h5 checkpoints (4 models x 3 seeds x 3 scenarios); see data/checkpoint_manifest.csv for per-file checksums."
 ```
 
-### Zenodo 上现在只需要放模型权重
+**C. 一定要留在仓库目录里的话**
+把每个 >100 MB 的 `.h5` 切成 ≤95 MB 分片再入仓：
+```bash
+split -b 95m best_model.h5 best_model.h5.part-
+# 恢复：cat best_model.h5.part-* > best_model.h5
+```
+代价是仓库变成约 1 GB、clone 要几分钟，且 GitHub 会提示仓库偏大，所以不推荐。
 
-1. 打开 https://zenodo.org → Log in with GitHub → Upload → New upload
-2. 一个 deposit 即可：
-   - **Models**：6 个训练好的 checkpoint（Scenario 3 的 CLA / CNN-LSTM / LSTM-Attention / 2D-CNN-Attention）
-   - （可选）若能取回，附 `CALPUFF DATA3\puff\CALMET01.DAT`（场景 2）与
-     `CALPUFF DATA S3\puff\CALMET01.DAT`（场景 3）
-   - 三个 `CALPUFF-s*.INP` 与场景 1 的 CALMET 全套文件已在 GitHub 仓库里，不要重复上传
-3. License 选 `Creative Commons Attribution 4.0`
-4. Resource type 选 Software
-5. 发布后拿到 DOI，填回正文的 Data availability 段。
-   对应稿件中那句话建议改为：
-   > Code, the full CALPUFF simulated datasets (gzip-compressed), figure source data, the exact
-   > receptor coordinates and the CALPUFF input-parameter audit tables are deposited in a public
-   > GitHub repository (URL to be inserted at proof stage); the six trained model checkpoints are
-   > deposited in Zenodo (DOI to be inserted at proof stage).
+### 正文 Data availability 建议改为
+
+> Code, the full CALPUFF simulated datasets (gzip-compressed), the trained model checkpoints,
+> the figure source data, the exact receptor coordinates and the CALPUFF input-parameter audit
+> tables are deposited in a public GitHub repository (URL to be inserted at proof stage); the
+> checkpoints are attached to the v1.0.0 release of that repository.
 
    把两处 "to be inserted at proof stage" 换成实际 URL 与 DOI 即可；
    GitHub 仓库 URL 直接用第 2 步的 `https://github.com/<用户名>/cla-reliability-aware-inversion`。

@@ -8,8 +8,10 @@ learned + protocol gating stage, and audits its behaviour when the monitoring ne
 (station loss, temporal truncation, multiplicative bias, limit-of-detection censoring).
 
 This repository contains the **code**, the **audit scripts**, the **source data behind every figure and
-every number quoted in the paper**, and the **complete CALPUFF simulated datasets** for all three
-scenarios (`data/simulated/`, gzip-compressed; see [Data availability](#data-availability)).
+every number quoted in the paper**, the **complete CALPUFF simulated datasets** for all three
+scenarios (`data/simulated/`, gzip-compressed), and the **36 trained model checkpoints**
+(attached to the repository Releases; see [Data availability](#data-availability)).
+Nothing is hosted outside GitHub.
 
 ---
 
@@ -43,6 +45,7 @@ scenarios (`data/simulated/`, gzip-compressed; see [Data availability](#data-ava
 │   │                         (CALPUFF-s1/s2/s3.INP, CALMET.INP, CALMET01.DAT, surf.dat, up2.dat, geo.dat)
 │   ├── simulated/            Full CALPUFF simulated datasets, gzip-compressed
 │   │                         (data_s1/s2/s3.csv.gz, ~20 MB each; decompress with `gzip -d`)
+│   ├── checkpoint_manifest.csv  Per-file checksums and provenance of all 36 checkpoints
 │   ├── figure_source/        One CSV per manuscript figure
 │   └── audits/               Configuration, geometry, gate and coverage audits
 ├── figures/                  Rendered audit figures (PDF / PNG / SVG)
@@ -134,10 +137,39 @@ The two audit figures above are rendered in `figures/` (`Fig_gate_audit` and
 | CALPUFF input files for the three scenarios (`data/calpuff_inputs/CALPUFF-s1/s2/s3.INP`) | this repository |
 | CALMET control file and the 1978-10-19 meteorological field for Scenario 1 (`CALMET.INP`, `CALMET01.DAT`, `surf.dat`, `up2.dat`, `geo.dat`) | this repository |
 | Full CALPUFF simulated datasets, ~900 MB uncompressed (`data/simulated/data_s1/s2/s3.csv.gz`, ~20 MB each) | this repository, gzip-compressed |
-| Six trained model checkpoints (CLA, CNN-LSTM, LSTM-Attention, 2D-CNN-Attention; Scenario 3) | Zenodo |
-| CALMET fields for the Scenario 2 / 3 domains (25 × 25 grid, origin 339.08 / 6174.61 km) | Zenodo, once retrieved from the original workstation, or regenerated from the archived `CALMET.INP` |
+| Trained model checkpoints, 36 in total (`best_model.h5`, 4 models × 3 seeds × 3 scenarios, ~1.0 GB) | this repository, **Releases** (see [Trained model checkpoints](#trained-model-checkpoints)) |
+| CALMET fields for the Scenario 2 / 3 domains (25 × 25 grid, origin 339.08 / 6174.61 km) | not archived; regenerate from the archived `CALMET.INP` (see note below) |
 
-Zenodo DOI: *to be inserted at proof stage.*
+Everything needed to reproduce the manuscript — code, simulated datasets, checkpoints and
+figure source data — is available on GitHub; no external archive is required.
+
+### Trained model checkpoints
+
+The 36 checkpoints that produced every reported number are bundled per scenario and attached
+to the repository **Releases** (single-file limit 2 GB there, versus the 100 MB per-file limit
+inside a git repository):
+
+| Release asset | Contents | Size | MD5 |
+|---|---|---|---|
+| `scenario_1_weights.tar` | 4 models × 3 seeds, Scenario 1 | 327.9 MB | `6b6de15610f5ae2fea1366532c39f84d` |
+| `scenario_2_weights.tar` | 4 models × 3 seeds, Scenario 2 | 406.4 MB | `272df427b4b2435bcc350bfcaeaca767` |
+| `scenario_3_weights.tar` | 4 models × 3 seeds, Scenario 3 | 267.8 MB | `b136fe77a7dc452a3be3699383308bdd` |
+
+```bash
+# download from the Releases page, then
+tar -xf scenario_1_weights.tar   # -> scenario_1/iid/order_original/<MODEL>/seed_<SEED>/best_model.h5
+```
+
+Only `best_model.h5` (the checkpoint with the lowest validation loss, `save_best_only=True`)
+is archived; per-file checksums and their provenance are listed in `data/checkpoint_manifest.csv`.
+
+### What is deliberately not archived
+
+The exploratory runs under `outputs/` (~2.7 GB: architecture ablations, capacity scaling,
+hyper-parameter sensitivity and smoke tests) are **not** archived. No number reported in the
+manuscript comes from those runs — they only motivated the frozen configuration now recorded in
+`frozen_hyperparameters_manuscript.json`. Their aggregated summaries are already included in
+`data/audits/` and `data/figure_source/` where they are cited.
 
 ### Decompressing the simulated datasets
 

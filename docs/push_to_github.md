@@ -124,22 +124,27 @@ split -b 95m best_model.h5 best_model.h5.part-
    把两处 "to be inserted at proof stage" 换成实际 URL 与 DOI 即可；
    GitHub 仓库 URL 直接用第 2 步的 `https://github.com/<用户名>/cla-reliability-aware-inversion`。
 
-### 场景 2 / 3 的气象场（可选）
+### 气象场：三个场景共用一份（已解决，已归档）
 
-论文三个场景用了三份 CALMET 输出，本机目前只有场景 1 那份：
+之前的疑问（场景 2 / 3 的气象场不在本机）已经澄清：**三个场景的扩散数据由同一份 CALMET 输出
+生成**。三个 INP 里的 METDAT 指向 E 盘三个不同目录，但那份气象文件本身是同一份。
 
-| 场景 | INP 里的 METDAT 路径 | 网格 | 本机是否已有 |
-|---|---|---|---|
-| 1 | `E:\CALPUFF DATA2\puff\CALMET01.DAT` | 20×20，原点 341.58 / 6174.61 | ✅ 已归档（`CALPUFF模拟1978-10-19案例` 里的那份，域参数完全一致） |
-| 2 | `E:\CALPUFF DATA3\puff\CALMET01.DAT` | 25×25，原点 339.08 / 6174.61 | ❌ |
-| 3 | `E:\CALPUFF DATA S3\puff\CALMET01.DAT` | 25×25，原点 339.08 / 6174.61 | ❌ |
+| 项目 | 值 |
+|---|---|
+| 归档文件 | `data/calpuff_inputs/CALMET01_shared.DAT`（2.4 MB） |
+| 来源 | `CAL\GBHG气象、地形\` 根目录下标注"三个场景的扩散数据都是用这个气象文件生成的"那份 |
+| 气象场网格 | 20×20，0.5 km，原点 341.580 / 6174.610，UTM 33，NZ=3 |
+| 时段 | 1978-10-19，IBHR=0 → IEHR=**23**（0–23 时，20 min 步长） |
+| 覆盖情况 | 论文模拟 12–16 时，完整落在气象场时段内，无需外推或复用最后一小时 |
 
-两个办法任选：
-- **取回**：到当时跑 CALPUFF 的工作站，把 `CALPUFF DATA3\puff\CALMET01.DAT` 与
-  `CALPUFF DATA S3\puff\CALMET01.DAT` 拷出来，一起传到 Zenodo；
-- **重建**：仓库里已归档 `CALMET.INP` + `surf.dat` + `up2.dat` + `geo.dat`，
-  把 `NX`、`NY` 改成 25、`XORIGKM` 改成 339.08 后重跑 CALMET 即可得到场景 2 / 3 的气象场
-  （CALMET 程序在 `Desktop\yunsuan\calmetl.exe`）。
+三个场景的 CALPUFF 受体网格不同（s1 为 20×20 原点 341.58；s2/s3 为 25×25 原点 339.08），
+由各自的 `CALPUFF-sX.INP` 定义，CALPUFF 在共享气象场上插值取值——这正是当时的实际配置。
+
+同时归档的还有：`CALMET_shared.INP`（从 DAT 内嵌控制文件块逐条记录提取，与实际生成该气象场
+时使用的一致）、`CALMET_shared.LST`、`surf.dat`、`up2.dat`、`geo.dat`、`lu.dat`、
+`ctgproc.inp`、`GBHG_terrain.tif`。
+
+未归档：CTG 原始地形栅格 `euogel20.tif`（169 MB，过大），详见 `docs/meteorology_inputs.md`。
 
 注意：`CALPUFF模拟福岛核事故` 那套是**另一个项目**（日本 UTM 54、160 km 域、CS-137），
 与本论文无关，不要混进归档。

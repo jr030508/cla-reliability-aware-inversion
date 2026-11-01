@@ -41,8 +41,10 @@ Nothing is hosted outside GitHub.
 │   ├── run_patch_conformal_ood.py          Conditional (Mondrian) conformal patch experiments
 │   └── analyze_tadrg_outputs.py            Gate discrimination and calibration audits
 ├── data/
-│   ├── calpuff_inputs/       CALPUFF and CALMET input files for the 1978-10-19 Copenhagen case
-│   │                         (CALPUFF-s1/s2/s3.INP, CALMET.INP, CALMET01.DAT, surf.dat, up2.dat, geo.dat)
+│   ├── calpuff_inputs/       CALPUFF and CALMET inputs for the 1978-10-19 Copenhagen (GBHG) case
+│   │                         (CALPUFF-s1/s2/s3.INP, CALMET_shared.INP, CALMET01_shared.DAT,
+│   │                          CALMET_shared.LST, surf.dat, up2.dat, geo.dat, lu.dat,
+│   │                          ctgproc.inp, GBHG_terrain.tif) — see docs/meteorology_inputs.md
 │   ├── simulated/            Full CALPUFF simulated datasets, gzip-compressed
 │   │                         (data_s1/s2/s3.csv.gz, ~20 MB each; decompress with `gzip -d`)
 │   ├── checkpoint_manifest.csv  Per-file checksums and provenance of all 36 checkpoints
@@ -135,10 +137,10 @@ The two audit figures above are rendered in `figures/` (`Fig_gate_audit` and
 |---|---|
 | Code, figure source data, audits, receptor coordinates | this repository |
 | CALPUFF input files for the three scenarios (`data/calpuff_inputs/CALPUFF-s1/s2/s3.INP`) | this repository |
-| CALMET control file and the 1978-10-19 meteorological field for Scenario 1 (`CALMET.INP`, `CALMET01.DAT`, `surf.dat`, `up2.dat`, `geo.dat`) | this repository |
+| CALMET control file, the 1978-10-19 meteorological field shared by **all three scenarios** (`CALMET_shared.INP`, `CALMET01_shared.DAT`, `CALMET_shared.LST`), plus `surf.dat`, `up2.dat`, `geo.dat`, `lu.dat`, `ctgproc.inp`, `GBHG_terrain.tif` | this repository |
 | Full CALPUFF simulated datasets, ~900 MB uncompressed (`data/simulated/data_s1/s2/s3.csv.gz`, ~20 MB each) | this repository, gzip-compressed |
 | Trained model checkpoints, 36 in total (`best_model.h5`, 4 models × 3 seeds × 3 scenarios, ~1.0 GB) | this repository, **Releases** (see [Trained model checkpoints](#trained-model-checkpoints)) |
-| CALMET fields for the Scenario 2 / 3 domains (25 × 25 grid, origin 339.08 / 6174.61 km) | not archived; regenerate from the archived `CALMET.INP` (see note below) |
+| CALMET fields for the Scenario 2 / 3 domains | not needed: all three scenarios share `CALMET01_shared.DAT`; the 25 × 25 receptor grids are defined in the archived `CALPUFF-s2/s3.INP` |
 
 Everything needed to reproduce the manuscript — code, simulated datasets, checkpoints and
 figure source data — is available on GitHub; no external archive is required.
@@ -191,19 +193,22 @@ gzip -dk data_s3.csv.gz   # -> data s3.csv
 (gzip -d decompresses; add -k to keep the .gz files. On Windows, 7-Zip or `gzip` from Git Bash both work.)
 Checksums (MD5) are provided in `data/simulated/md5sums.txt` for integrity verification.
 
-The three scenarios use separate CALMET domains: Scenario 1 is a 20 × 20 grid at 0.5 km spacing with
-origin (341.58, 6174.61) km in UTM zone 33, and Scenarios 2–3 are 25 × 25 grids with origin
-(339.08, 6174.61) km. The archived `CALMET.INP` and `CALMET01.DAT` correspond to the Scenario 1
-domain; regenerating the Scenario 2 / 3 fields requires only changing `NX`, `NY` and `XORIGKM` in
-that file and re-running CALMET with the archived `surf.dat`, `up2.dat` and `geo.dat`.
+All three scenarios share one meteorological field: `data/calpuff_inputs/CALMET01_shared.DAT`, a
+20 × 20 grid at 0.5 km spacing with origin (341.58, 6174.61) km in UTM zone 33, three vertical
+layers, covering 00:00–23:00 on 1978-10-19 with a 1200 s step. The three CALPUFF runs then sample
+it on different grids — Scenario 1 on a 20 × 20 grid at origin (341.58, 6174.61) km, and
+Scenarios 2–3 on 25 × 25 grids at origin (339.08, 6174.61) km. This shared field is the one that
+produced all three simulated datasets; see `docs/meteorology_inputs.md` for the file inventory and
+the regeneration procedure.
 
 ## Meteorological case
 
-The meteorological background is the 19 October 1978 Copenhagen tracer experiment, the standard
-CALPUFF verification case. The archived CALMET run covers 04:00–14:00 UTC on that day at a 0.5 km
-grid spacing, with three vertical layers; the CALPUFF runs use a 1200 s meteorological time step.
-Note that Scenario 1 is integrated over 12:00–16:00, i.e. two hours beyond the end of the archived
-meteorological field, for which CALPUFF reuses the final available hour.
+The meteorological background is the 19 October 1978 Copenhagen (GBHG) tracer experiment, the
+standard CALPUFF verification case. The archived CALMET run covers **00:00–23:00** on that day
+(IBHR = 0, IEHR = 23) at a 0.5 km grid spacing with three vertical layers, and the CALPUFF runs use
+a 1200 s meteorological time step. The reported simulations are integrated over 12:00–16:00, which
+falls entirely inside the archived field, so no extrapolation or hour reuse is involved.
+The CTG-derived geophysical inputs and the terrain raster are archived alongside the CALMET inputs.
 
 ---
 

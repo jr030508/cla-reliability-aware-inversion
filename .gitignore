@@ -28,3 +28,8 @@ data s3.csv
 *.INP
 CALMET*.DAT
 CALPUFF*.lst
+
+# ...but the CALPUFF/CALMET inputs under data/calpuff_inputs/ are archived on purpose:
+# they are needed to regenerate the simulated datasets, so they must be committed.
+!data/calpuff_inputs/*.INP
+!data/calpuff_inputs/CALMET01_shared.DAT

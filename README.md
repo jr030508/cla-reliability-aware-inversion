@@ -39,6 +39,8 @@ are archived separately on Zenodo (see [Data availability](#data-availability)).
 │   ├── run_patch_conformal_ood.py          Conditional (Mondrian) conformal patch experiments
 │   └── analyze_tadrg_outputs.py            Gate discrimination and calibration audits
 ├── data/
+│   ├── calpuff_inputs/       CALPUFF and CALMET input files for the 1978-10-19 Copenhagen case
+│   │                         (CALPUFF-s1/s2/s3.INP, CALMET.INP, CALMET01.DAT, surf.dat, up2.dat, geo.dat)
 │   ├── figure_source/        One CSV per manuscript figure
 │   └── audits/               Configuration, geometry, gate and coverage audits
 ├── figures/                  Rendered audit figures (PDF / PNG / SVG)
@@ -126,11 +128,28 @@ The two audit figures above are rendered in `figures/` (`Fig_gate_audit` and
 
 | Item | Location |
 |---|---|
-| Code, figure source data, audits, receptor coordinates, CALPUFF input-parameter audit | this repository |
+| Code, figure source data, audits, receptor coordinates | this repository |
+| CALPUFF input files for the three scenarios (`data/calpuff_inputs/CALPUFF-s1/s2/s3.INP`) | this repository |
+| CALMET control file and the 1978-10-19 meteorological field for Scenario 1 (`CALMET.INP`, `CALMET01.DAT`, `surf.dat`, `up2.dat`, `geo.dat`) | this repository |
 | ~900 MB CALPUFF simulated datasets (`data s1/s2/s3.csv`) | Zenodo |
 | Six trained model checkpoints (CLA, CNN-LSTM, LSTM-Attention, 2D-CNN-Attention; Scenario 3) | Zenodo |
+| CALMET fields for the Scenario 2 / 3 domains (25 × 25 grid, origin 339.08 / 6174.61 km) | Zenodo, once retrieved from the original workstation, or regenerated from the archived `CALMET.INP` |
 
 Zenodo DOI: *to be inserted at proof stage.*
+
+The three scenarios use separate CALMET domains: Scenario 1 is a 20 × 20 grid at 0.5 km spacing with
+origin (341.58, 6174.61) km in UTM zone 33, and Scenarios 2–3 are 25 × 25 grids with origin
+(339.08, 6174.61) km. The archived `CALMET.INP` and `CALMET01.DAT` correspond to the Scenario 1
+domain; regenerating the Scenario 2 / 3 fields requires only changing `NX`, `NY` and `XORIGKM` in
+that file and re-running CALMET with the archived `surf.dat`, `up2.dat` and `geo.dat`.
+
+## Meteorological case
+
+The meteorological background is the 19 October 1978 Copenhagen tracer experiment, the standard
+CALPUFF verification case. The archived CALMET run covers 04:00–14:00 UTC on that day at a 0.5 km
+grid spacing, with three vertical layers; the CALPUFF runs use a 1200 s meteorological time step.
+Note that Scenario 1 is integrated over 12:00–16:00, i.e. two hours beyond the end of the archived
+meteorological field, for which CALPUFF reuses the final available hour.
 
 ---
 

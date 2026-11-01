@@ -64,8 +64,12 @@ GitHub 单文件上限 100 MB、仓库建议不超过 1 GB，所以 ~900 MB 的�
 
 1. 打开 https://zenodo.org → Log in with GitHub → Upload → New upload
 2. 分两个 deposit（便于分别引用）：
-   - **Dataset**：`data s1.csv`、`data s2.csv`、`data s3.csv` + 三个 `CALPUFF-s*.INP` + CALMET 输出
+   - **Dataset**：`data s1.csv`、`data s2.csv`、`data s3.csv`（约 900 MB）
+     ＋ 若能取回，附 `CALPUFF DATA3\puff\CALMET01.DAT`（场景 2）与 `CALPUFF DATA S3\puff\CALMET01.DAT`（场景 3）
    - **Models**：6 个训练好的 checkpoint（Scenario 3 的 CLA / CNN-LSTM / LSTM-Attention / 2D-CNN-Attention）
+
+   注意：三个 `CALPUFF-s*.INP` 与场景 1 的 CALMET 全套文件**已经放进 GitHub 仓库**
+   （`data/calpuff_inputs/`），不要再重复上传到 Zenodo。
 3. License 选 `Creative Commons Attribution 4.0`
 4. Resource type 分别选 Dataset / Software
 5. 发布后拿到两个 DOI，填回正文的 Data availability 段。
@@ -75,7 +79,28 @@ GitHub 单文件上限 100 MB、仓库建议不超过 1 GB，所以 ~900 MB 的�
    > ~900 MB CALPUFF simulated datasets and the six trained model checkpoints are deposited in Zenodo
    > (DOI to be inserted at proof stage).
 
-   把两处 "to be inserted at proof stage" 换成实际 URL 与 DOI 即可。
+   把两处 "to be inserted at proof stage" 换成实际 URL 与 DOI 即可；
+   GitHub 仓库 URL 直接用第 2 步的 `https://github.com/<用户名>/cla-reliability-aware-inversion`。
+
+### 场景 2 / 3 的气象场（可选）
+
+论文三个场景用了三份 CALMET 输出，本机目前只有场景 1 那份：
+
+| 场景 | INP 里的 METDAT 路径 | 网格 | 本机是否已有 |
+|---|---|---|---|
+| 1 | `E:\CALPUFF DATA2\puff\CALMET01.DAT` | 20×20，原点 341.58 / 6174.61 | ✅ 已归档（`CALPUFF模拟1978-10-19案例` 里的那份，域参数完全一致） |
+| 2 | `E:\CALPUFF DATA3\puff\CALMET01.DAT` | 25×25，原点 339.08 / 6174.61 | ❌ |
+| 3 | `E:\CALPUFF DATA S3\puff\CALMET01.DAT` | 25×25，原点 339.08 / 6174.61 | ❌ |
+
+两个办法任选：
+- **取回**：到当时跑 CALPUFF 的工作站，把 `CALPUFF DATA3\puff\CALMET01.DAT` 与
+  `CALPUFF DATA S3\puff\CALMET01.DAT` 拷出来，一起传到 Zenodo；
+- **重建**：仓库里已归档 `CALMET.INP` + `surf.dat` + `up2.dat` + `geo.dat`，
+  把 `NX`、`NY` 改成 25、`XORIGKM` 改成 339.08 后重跑 CALMET 即可得到场景 2 / 3 的气象场
+  （CALMET 程序在 `Desktop\yunsuan\calmetl.exe`）。
+
+注意：`CALPUFF模拟福岛核事故` 那套是**另一个项目**（日本 UTM 54、160 km 域、CS-137），
+与本论文无关，不要混进归档。
 
 ---
 

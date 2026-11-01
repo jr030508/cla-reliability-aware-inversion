@@ -151,9 +151,13 @@ inside a git repository):
 
 | Release asset | Contents | Size | MD5 |
 |---|---|---|---|
-| `scenario_1_weights.tar` | 4 models × 3 seeds, Scenario 1 | 327.9 MB | `6b6de15610f5ae2fea1366532c39f84d` |
-| `scenario_2_weights.tar` | 4 models × 3 seeds, Scenario 2 | 406.4 MB | `272df427b4b2435bcc350bfcaeaca767` |
+| `scenario_1_weights.tar` | 4 models × 3 seeds, Scenario 1 | 259.9 MB | `df960e9e8952c600c51b508437b1df7f` |
+| `scenario_2_weights.tar` | 4 models × 3 seeds, Scenario 2 | 259.9 MB | `e003747e6e78476c85fad0505d24dca0` |
 | `scenario_3_weights.tar` | 4 models × 3 seeds, Scenario 3 | 267.8 MB | `b136fe77a7dc452a3be3699383308bdd` |
+
+All 36 checkpoints come from the runs whose outputs reproduce the reported numbers exactly:
+Scenario 1 `0.02029`, Scenario 2 `0.05652 km / 0.05371`, Scenario 3 `0.0583 / 0.12701 km / 0.0760`
+(verified with `verify_checkpoint_provenance.py`).
 
 ```bash
 # download from the Releases page, then

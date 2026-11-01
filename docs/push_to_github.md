@@ -70,15 +70,19 @@ Release 附件单文件上限 2 GB，且**不计入仓库体积**，所以仓库
 
 | 附件 | 内容 | 大小 | MD5 |
 |---|---|---|---|
-| `scenario_1_weights.tar` | 场景1：4 模型 × 3 种子 | 327.9 MB | `6b6de15610f5ae2fea1366532c39f84d` |
-| `scenario_2_weights.tar` | 场景2：4 模型 × 3 种子 | 406.4 MB | `272df427b4b2435bcc350bfcaeaca767` |
+| `scenario_1_weights.tar` | 场景1：4 模型 × 3 种子 | 259.9 MB | `df960e9e8952c600c51b508437b1df7f` |
+| `scenario_2_weights.tar` | 场景2：4 模型 × 3 种子 | 259.9 MB | `e003747e6e78476c85fad0505d24dca0` |
 | `scenario_3_weights.tar` | 场景3：4 模型 × 3 种子 | 267.8 MB | `b136fe77a7dc452a3be3699383308bdd` |
 
-每个包内部路径 `scenario_X/iid/order_original/<MODEL>/seed_<SEED>/best_model.h5`，
-只保留 `best_model.h5`（验证损失最小的那一轮，论文数字来自它），末轮 `model.h5` 不归档。
-逐文件校验和与来源（冻结复验 / 旧运行）见仓库里的 `data/checkpoint_manifest.csv`。
+合计 788 MB。内部路径 `scenario_X/iid/order_original/<MODEL>/seed_<SEED>/best_model.h5`，
+只保留 `best_model.h5`（验证损失最小的那一轮），末轮 `model.h5` 不归档。
+逐文件校验和见 `data/checkpoint_manifest.csv`（36 行，来源均为与稿件数字同源的那批运行）。
 
-自己重做打包：`python3 pack_release_weights.py`。
+自己重做：
+```bash
+python3 analysis/verify_checkpoint_provenance.py   # 先核对数字来自哪一批
+python3 analysis/pack_release_weights.py           # 再按场景打包
+```
 
 ### 上传方式（三选一）
 

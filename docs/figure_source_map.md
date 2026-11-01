@@ -31,6 +31,13 @@ one script. No number in the paper is produced by hand.
 | Receptor-order locality permutation test | `data/audits/station_order_locality_summary.csv`, `station_order_permutation_distribution.csv` | `analysis/audit_receptor_geometry.py` |
 | Source–receptor geometry heterogeneity | `data/audits/source_receptor_geometry_audit.csv` | `analysis/audit_source_receptor_geometry.py` |
 
+## Audit figures (rendered in `figures/`)
+
+| Figure | Panels | Source CSVs | Script |
+|---|---|---|---|
+| `Fig_gate_audit` | (a) AUROC / AUPRC by task and scope; (b) accepted-sample residual failure rate with Wilson 95 % upper bound; (c) gate threshold feasibility vs 10 % tolerance; (d) risk-indicator redundancy | `data/audits/discrimination_scope_audit.csv`, `condition_audit.csv`, `gate_calibration_audit.csv`, `feature_redundancy_audit.csv` | `analysis/plot_gate_and_coverage_audit.py` |
+| `Fig_coverage_observability` | (a) subgroup coverage grouped by true vs predicted value; (b) deviation between the two assignments (max 1.25 pp) | `data/audits/predicted_group_coverage_audit.csv` | `analysis/plot_gate_and_coverage_audit.py` |
+
 ## Column dictionary for the audit tables
 
 ### `predicted_group_coverage_audit.csv`

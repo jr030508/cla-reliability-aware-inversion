@@ -41,6 +41,9 @@ are archived separately on Zenodo (see [Data availability](#data-availability)).
 ├── data/
 │   ├── figure_source/        One CSV per manuscript figure
 │   └── audits/               Configuration, geometry, gate and coverage audits
+├── figures/                  Rendered audit figures (PDF / PNG / SVG)
+│   ├── Fig_gate_audit.*              Reliability-gate audit, panels a-d
+│   └── Fig_coverage_observability.*  Truth- vs prediction-grouped coverage
 ├── docs/
 │   └── figure_source_map.md  Figure → source CSV → script correspondence
 ├── config.json               Experiment configuration
@@ -112,6 +115,10 @@ Scenario 1 has a fixed source with receptors at 1.77–6.20 km (median 3.66 km) 
 38.2°–152.9°. Scenarios 2–3 resample the source inside a 5 km × 5 km box
 (UTM X 340.08–345.08 km, Y 6177.11–6182.11 km); the nearest-receptor distance varies from
 0.004 km to 4.07 km (median 1.42 km).
+
+The two audit figures above are rendered in `figures/` (`Fig_gate_audit` and
+`Fig_coverage_observability`, PDF / PNG / SVG at 300 dpi) and can be regenerated with
+`python analysis/plot_gate_and_coverage_audit.py`.
 
 ---
 

@@ -7,9 +7,9 @@ The study couples a CNN–LSTM–Attention (CLA) estimator with split-conformal 
 learned + protocol gating stage, and audits its behaviour when the monitoring network degrades
 (station loss, temporal truncation, multiplicative bias, limit-of-detection censoring).
 
-This repository contains the **code**, the **audit scripts** and the **source data behind every figure and
-every number quoted in the paper**. The large CALPUFF simulated datasets and the trained model checkpoints
-are archived separately on Zenodo (see [Data availability](#data-availability)).
+This repository contains the **code**, the **audit scripts**, the **source data behind every figure and
+every number quoted in the paper**, and the **complete CALPUFF simulated datasets** for all three
+scenarios (`data/simulated/`, gzip-compressed; see [Data availability](#data-availability)).
 
 ---
 
@@ -41,6 +41,8 @@ are archived separately on Zenodo (see [Data availability](#data-availability)).
 ├── data/
 │   ├── calpuff_inputs/       CALPUFF and CALMET input files for the 1978-10-19 Copenhagen case
 │   │                         (CALPUFF-s1/s2/s3.INP, CALMET.INP, CALMET01.DAT, surf.dat, up2.dat, geo.dat)
+│   ├── simulated/            Full CALPUFF simulated datasets, gzip-compressed
+│   │                         (data_s1/s2/s3.csv.gz, ~20 MB each; decompress with `gzip -d`)
 │   ├── figure_source/        One CSV per manuscript figure
 │   └── audits/               Configuration, geometry, gate and coverage audits
 ├── figures/                  Rendered audit figures (PDF / PNG / SVG)
@@ -131,11 +133,27 @@ The two audit figures above are rendered in `figures/` (`Fig_gate_audit` and
 | Code, figure source data, audits, receptor coordinates | this repository |
 | CALPUFF input files for the three scenarios (`data/calpuff_inputs/CALPUFF-s1/s2/s3.INP`) | this repository |
 | CALMET control file and the 1978-10-19 meteorological field for Scenario 1 (`CALMET.INP`, `CALMET01.DAT`, `surf.dat`, `up2.dat`, `geo.dat`) | this repository |
-| ~900 MB CALPUFF simulated datasets (`data s1/s2/s3.csv`) | Zenodo |
+| Full CALPUFF simulated datasets, ~900 MB uncompressed (`data/simulated/data_s1/s2/s3.csv.gz`, ~20 MB each) | this repository, gzip-compressed |
 | Six trained model checkpoints (CLA, CNN-LSTM, LSTM-Attention, 2D-CNN-Attention; Scenario 3) | Zenodo |
 | CALMET fields for the Scenario 2 / 3 domains (25 × 25 grid, origin 339.08 / 6174.61 km) | Zenodo, once retrieved from the original workstation, or regenerated from the archived `CALMET.INP` |
 
 Zenodo DOI: *to be inserted at proof stage.*
+
+### Decompressing the simulated datasets
+
+The three full simulation datasets are stored gzip-compressed to keep the repository lightweight
+(~60 MB total vs ~900 MB uncompressed). Restore the original filenames expected by
+`code/data_pipeline.py` with:
+
+```bash
+cd data/simulated
+gzip -dk data_s1.csv.gz   # -> data s1.csv
+gzip -dk data_s2.csv.gz   # -> data s2.csv
+gzip -dk data_s3.csv.gz   # -> data s3.csv
+```
+
+(gzip -d decompresses; add -k to keep the .gz files. On Windows, 7-Zip or `gzip` from Git Bash both work.)
+Checksums (MD5) are provided in `data/simulated/md5sums.txt` for integrity verification.
 
 The three scenarios use separate CALMET domains: Scenario 1 is a 20 × 20 grid at 0.5 km spacing with
 origin (341.58, 6174.61) km in UTM zone 33, and Scenarios 2–3 are 25 × 25 grids with origin

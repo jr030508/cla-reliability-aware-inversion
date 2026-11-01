@@ -20,7 +20,7 @@ saved_model/
 *.npz
 !data/audits/station_order_permutation_distribution.csv
 
-# Raw simulated datasets (~900 MB) live on Zenodo
+# Raw simulated datasets are committed gzip-compressed under data/simulated/
 data s1.csv
 data s2.csv
 data s3.csv

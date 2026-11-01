@@ -1,0 +1,3 @@
+d223f485ba9f122d9445f8962acd75a6 *data/simulated/data_s1.csv.gz
+72e48481db6267666b1244e759cee60b *data/simulated/data_s2.csv.gz
+cb3c605940881799b5da077d5de82cab *data/simulated/data_s3.csv.gz

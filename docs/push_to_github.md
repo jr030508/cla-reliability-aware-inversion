@@ -58,26 +58,45 @@ git config https.proxy http://127.0.0.1:7890
 ```
 或改用 Gitee 建镜像仓库，正文里同时给出 GitHub 与 Gitee 两个链接。
 
-## 第 3 步：把大文件上传到 Zenodo，并在正文填 DOI
+## 第 3 步：数据入仓（已做完）+ 模型权重上 Zenodo
 
-GitHub 单文件上限 100 MB、仓库建议不超过 1 GB，所以 ~900 MB 的模拟数据和模型权重**不要**放进仓库。
+### 模拟数据已放进仓库，无需再传 Zenodo
+
+三个 `data s*.csv` 各约 300 MB，超过 GitHub 单文件 100 MB 硬上限，直接 push 会被拒绝。
+解决办法是先 gzip 压缩——纯数值 CSV 压缩率极高：
+
+| 原始 | 大小 | 压缩后 | 大小 |
+|---|---|---|---|
+| data s1.csv | 297 MB | data_s1.csv.gz | 21.9 MB |
+| data s2.csv | 300 MB | data_s2.csv.gz | 18.9 MB |
+| data s3.csv | 301 MB | data_s3.csv.gz | 19.5 MB |
+
+合计约 60 MB，全部低于 100 MB，已提交到 `data/simulated/`（附 `md5sums.txt` 校验和），
+README 里写了解压方式（`gzip -dk`，解压后恢复 `data s1.csv` 等原始文件名）。
+
+自己重做一遍的命令（在 `CAL` 目录下）：
+```bash
+gzip -c "data s1.csv" > data_s1.csv.gz
+gzip -c "data s2.csv" > data_s2.csv.gz
+gzip -c "data s3.csv" > data_s3.csv.gz
+```
+
+### Zenodo 上现在只需要放模型权重
 
 1. 打开 https://zenodo.org → Log in with GitHub → Upload → New upload
-2. 分两个 deposit（便于分别引用）：
-   - **Dataset**：`data s1.csv`、`data s2.csv`、`data s3.csv`（约 900 MB）
-     ＋ 若能取回，附 `CALPUFF DATA3\puff\CALMET01.DAT`（场景 2）与 `CALPUFF DATA S3\puff\CALMET01.DAT`（场景 3）
+2. 一个 deposit 即可：
    - **Models**：6 个训练好的 checkpoint（Scenario 3 的 CLA / CNN-LSTM / LSTM-Attention / 2D-CNN-Attention）
-
-   注意：三个 `CALPUFF-s*.INP` 与场景 1 的 CALMET 全套文件**已经放进 GitHub 仓库**
-   （`data/calpuff_inputs/`），不要再重复上传到 Zenodo。
+   - （可选）若能取回，附 `CALPUFF DATA3\puff\CALMET01.DAT`（场景 2）与
+     `CALPUFF DATA S3\puff\CALMET01.DAT`（场景 3）
+   - 三个 `CALPUFF-s*.INP` 与场景 1 的 CALMET 全套文件已在 GitHub 仓库里，不要重复上传
 3. License 选 `Creative Commons Attribution 4.0`
-4. Resource type 分别选 Dataset / Software
-5. 发布后拿到两个 DOI，填回正文的 Data availability 段。
-   对应稿件中那句话现在写的是：
-   > Code, figure source data, the exact receptor coordinates and the CALPUFF input-parameter audit
-   > tables are deposited in a public GitHub repository (URL to be inserted at proof stage); the
-   > ~900 MB CALPUFF simulated datasets and the six trained model checkpoints are deposited in Zenodo
-   > (DOI to be inserted at proof stage).
+4. Resource type 选 Software
+5. 发布后拿到 DOI，填回正文的 Data availability 段。
+   对应稿件中那句话建议改为：
+   > Code, the full CALPUFF simulated datasets (gzip-compressed), figure source data, the exact
+   > receptor coordinates and the CALPUFF input-parameter audit tables are deposited in a public
+   > GitHub repository (URL to be inserted at proof stage); the six trained model checkpoints are
+   > deposited in Zenodo (DOI to be inserted at proof stage).
 
    把两处 "to be inserted at proof stage" 换成实际 URL 与 DOI 即可；
    GitHub 仓库 URL 直接用第 2 步的 `https://github.com/<用户名>/cla-reliability-aware-inversion`。
@@ -107,15 +126,19 @@ GitHub 单文件上限 100 MB、仓库建议不超过 1 GB，所以 ~900 MB 的�
 ## 推送前建议再检查一遍
 
 ```bash
-# 确认没有大文件被误加入
-git ls-files | xargs -I{} du -h {} | sort -rh | head -5
+# 确认没有超过 100 MB 的文件（GitHub 硬上限）
+git ls-files | xargs -I{} du -m {} | sort -rn | head -5
 
-# 确认 .gitignore 生效（不应出现 outputs/、*.npy、data s*.csv）
+# 确认 .gitignore 生效（不应出现 outputs/、*.npy、未压缩的 data s*.csv）
 git ls-files | grep -E "outputs|\.npy|data s[123]" || echo "OK: 大文件已排除"
 ```
 
-仓库里目前只有：代码 12 个文件、分析脚本 10 个、逐图源数据 10 个 CSV、审计结果 11 个 CSV，
-总计 814 KB，可直接推送。
+仓库现在约 63 MB：代码 12 个文件、分析脚本 10 个、逐图源数据 10 个 CSV、审计结果 11 个 CSV，
+外加三份压缩后的模拟数据（60 MB）。推送 60 MB 数据在国内网络下大概几分钟到十几分钟，
+若中途断线可以重复执行 `git push`（git 是可续传的，比网页上传稳）。
+
+> 如果之后觉得 60 MB 还是太慢，可以用 Git LFS 托管这三个 .gz（GitHub 免费额度 1 GB 存储/月），
+> 但普通 push 已经够用，不建议再增加复杂度。
 
 ---
 

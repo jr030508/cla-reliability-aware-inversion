@@ -38,6 +38,9 @@ one script. No number in the paper is produced by hand.
 | `Fig_gate_audit` | (a) AUROC / AUPRC by task and scope; (b) accepted-sample residual failure rate with Wilson 95 % upper bound; (c) gate threshold feasibility vs 10 % tolerance; (d) risk-indicator redundancy | `data/audits/discrimination_scope_audit.csv`, `condition_audit.csv`, `gate_calibration_audit.csv`, `feature_redundancy_audit.csv` | `analysis/plot_gate_and_coverage_audit.py` |
 | `Fig_coverage_observability` | (a) subgroup coverage grouped by true vs predicted value; (b) deviation between the two assignments (max 1.25 pp) | `data/audits/predicted_group_coverage_audit.csv` | `analysis/plot_gate_and_coverage_audit.py` |
 
+| `Fig_task_decomposition_statistics` | (a) rank-biserial effect size of joint vs single-task training with per-seed values; (b) percentage error increase of joint training (joint value as denominator) | `data/audits/task_decomposition_wilcoxon_tests.csv` | `analysis/plot_task_decomposition_statistics.py` |
+| Table S (task decomposition tests) | Pooled and per-seed Wilcoxon signed-rank tests, Holm-adjusted p, effect sizes and bootstrap CIs | `data/audits/task_decomposition_wilcoxon_tests.csv` | `analysis/wilcoxon_task_decomposition.py` |
+
 ## Column dictionary for the audit tables
 
 ### `predicted_group_coverage_audit.csv`
